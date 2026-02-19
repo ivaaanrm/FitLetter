@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init:*)",
+      "Bash(uv sync:*)",
+      "Bash(npx create-next-app@latest:*)",
+      "Bash(npx tsc:*)",
+      "Bash(uv run python:*)",
+      "Bash(npm run build:*)",
+      "Bash(uv add:*)",
+      "Bash(uv run pytest:*)"
+    ]
+  }
+}
