@@ -1,7 +1,8 @@
+import base64
 import logging
 
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
-from fastapi.responses import Response
+from fastapi.responses import JSONResponse
 
 from services.claude_agent import generate_latex
 from services.cv_parser import extract_text_from_pdf
@@ -17,7 +18,7 @@ async def generate_cover_letter(
     template_tex: UploadFile = File(..., description="LaTeX template (.tex)"),
     job_description: str = Form(..., description="Job description text"),
     company_name: str = Form(..., description="Company name"),
-) -> Response:
+) -> JSONResponse:
     logger.info("Request received: company=%r, cv=%r, template=%r", company_name, cv_pdf.filename, template_tex.filename)
 
     # Validate file types
@@ -63,9 +64,8 @@ async def generate_cover_letter(
         logger.exception("[4/4] LaTeX compilation failed")
         raise HTTPException(status_code=500, detail=f"LaTeX compilation failed: {e}")
 
-    logger.info("Done — returning PDF")
-    return Response(
-        content=pdf_bytes,
-        media_type="application/pdf",
-        headers={"Content-Disposition": 'attachment; filename="cover_letter.pdf"'},
-    )
+    logger.info("Done — returning PDF + LaTeX")
+    return JSONResponse(content={
+        "pdf": base64.b64encode(pdf_bytes).decode("ascii"),
+        "tex": latex_code,
+    })

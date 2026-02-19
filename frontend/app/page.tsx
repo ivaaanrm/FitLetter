@@ -24,16 +24,18 @@ export default function Home() {
   const [status, setStatus] = useState<Status>("idle");
   const [currentStep, setCurrentStep] = useState(0);
   const [errorMsg, setErrorMsg] = useState("");
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [texUrl, setTexUrl] = useState<string | null>(null);
 
   const stepTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
     return () => {
-      if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+      if (texUrl) URL.revokeObjectURL(texUrl);
       stepTimers.current.forEach(clearTimeout);
     };
-  }, [downloadUrl]);
+  }, [pdfUrl, texUrl]);
 
   function startStepAnimation() {
     stepTimers.current.forEach(clearTimeout);
@@ -56,10 +58,8 @@ export default function Home() {
     e.preventDefault();
     if (!cvFile || !templateFile) return;
 
-    if (downloadUrl) {
-      URL.revokeObjectURL(downloadUrl);
-      setDownloadUrl(null);
-    }
+    if (pdfUrl) { URL.revokeObjectURL(pdfUrl); setPdfUrl(null); }
+    if (texUrl) { URL.revokeObjectURL(texUrl); setTexUrl(null); }
 
     setStatus("loading");
     setErrorMsg("");
@@ -86,9 +86,14 @@ export default function Home() {
         return;
       }
 
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      setDownloadUrl(url);
+      const data = await res.json();
+      const pdfBlob = new Blob(
+        [Uint8Array.from(atob(data.pdf), (c) => c.charCodeAt(0))],
+        { type: "application/pdf" }
+      );
+      const texBlob = new Blob([data.tex], { type: "text/plain" });
+      setPdfUrl(URL.createObjectURL(pdfBlob));
+      setTexUrl(URL.createObjectURL(texBlob));
       setCurrentStep(STEPS.length - 1);
       setStatus("success");
     } catch (err) {
@@ -184,18 +189,27 @@ export default function Home() {
         )}
 
         {/* Success */}
-        {status === "success" && downloadUrl && (
+        {status === "success" && pdfUrl && texUrl && (
           <div className="mt-8 p-4 rounded-lg bg-green-950 border border-green-800 flex items-center justify-between">
             <span className="text-sm text-green-300 font-medium">
               Cover letter ready
             </span>
-            <a
-              href={downloadUrl}
-              download="cover-letter.pdf"
-              className="rounded-lg bg-green-600 text-white text-sm font-semibold px-4 py-2 hover:bg-green-500 transition-colors cursor-pointer"
-            >
-              Download PDF
-            </a>
+            <div className="flex gap-2">
+              <a
+                href={texUrl}
+                download="cover-letter.tex"
+                className="rounded-lg bg-slate-700 text-slate-200 text-sm font-semibold px-4 py-2 hover:bg-slate-600 transition-colors cursor-pointer"
+              >
+                Download .tex
+              </a>
+              <a
+                href={pdfUrl}
+                download="cover-letter.pdf"
+                className="rounded-lg bg-green-600 text-white text-sm font-semibold px-4 py-2 hover:bg-green-500 transition-colors cursor-pointer"
+              >
+                Download PDF
+              </a>
+            </div>
           </div>
         )}
 
