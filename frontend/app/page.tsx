@@ -87,9 +87,7 @@ export default function Home() {
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        setErrorMsg(
-          data.message ?? data.error ?? `Server error ${res.status}`,
-        );
+        setErrorMsg(data.message ?? data.error ?? `Server error ${res.status}`);
         setStatus("error");
         return;
       }
@@ -120,14 +118,13 @@ export default function Home() {
     !isLoading;
 
   return (
-    <main className="bg-gradient-animated min-h-screen flex items-start justify-center py-12 px-4 sm:py-16">
-      <div className="w-full max-w-2xl">
-        {/* Header */}
-        <header className="mb-10">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 ring-1 ring-primary/30">
+    <main className="bg-gradient-animated min-h-screen px-4 py-8 sm:px-6 sm:py-10">
+      <div className="mx-auto w-full max-w-4xl">
+        <nav className="mb-10 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-card-border/80 bg-background-soft/80 px-5 py-3 shadow-[0_10px_32px_rgba(80,65,31,0.08)] backdrop-blur-sm">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
               <svg
-                className="h-5 w-5 text-primary-light"
+                className="h-5 w-5"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -140,26 +137,46 @@ export default function Home() {
                 <polyline points="14 2 14 8 20 8" />
                 <line x1="16" y1="13" x2="8" y2="13" />
                 <line x1="16" y1="17" x2="8" y2="17" />
-                <polyline points="10 9 9 9 8 9" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-slate-50 tracking-tight sm:text-3xl">
-              Cover Letter Maker
-            </h1>
+            <div>
+              <p className="font-display text-xl leading-none text-foreground">FitLetter</p>
+              <p className="text-xs text-muted">LaTeX cover letters tailored with Claude</p>
+            </div>
           </div>
-          <p className="text-slate-400 text-sm leading-relaxed max-w-lg">
-            Paste the job details and upload your CV. Optionally add your LaTeX
-            template to preserve its formatting. Claude will tailor the cover
-            letter to the job description.
+
+          <a
+            href="https://github.com/ivaaanrm/FitLetter"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl border border-card-border bg-white px-4 py-2 text-sm font-semibold text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary hover:shadow-[0_10px_20px_rgba(27,127,106,0.14)]"
+          >
+            <svg
+              className="h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M12 .5C5.65.5.5 5.7.5 12.12c0 5.14 3.29 9.5 7.86 11.04.58.11.79-.26.79-.58v-2.24c-3.2.71-3.88-1.39-3.88-1.39-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.78 1.22 1.78 1.22 1.03 1.8 2.7 1.28 3.35.98.1-.76.4-1.28.74-1.57-2.55-.3-5.23-1.3-5.23-5.78 0-1.28.45-2.32 1.19-3.14-.12-.3-.52-1.5.11-3.13 0 0 .97-.32 3.18 1.2a10.9 10.9 0 0 1 5.78 0c2.2-1.52 3.17-1.2 3.17-1.2.63 1.63.23 2.83.11 3.13.74.82 1.19 1.86 1.19 3.14 0 4.5-2.69 5.47-5.25 5.76.41.36.78 1.06.78 2.14v3.17c0 .32.21.7.8.58a11.64 11.64 0 0 0 7.84-11.04C23.5 5.7 18.35.5 12 .5" />
+            </svg>
+            GitHub Repo
+          </a>
+        </nav>
+
+        <header className="mb-8 max-w-2xl">
+          <h1 className="font-display text-4xl tracking-tight text-foreground sm:text-5xl">
+            Write a polished cover letter in one pass
+          </h1>
+          <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
+            Upload your CV, paste the job posting, and optionally include your
+            LaTeX template. FitLetter returns both `.tex` and compiled PDF.
           </p>
         </header>
 
-        {/* Card */}
-        <div className="rounded-2xl border border-card-border bg-card/80 backdrop-blur-sm p-6 sm:p-8 shadow-xl shadow-black/20">
+        <div className="rounded-[1.6rem] border border-card-border bg-card/95 p-6 shadow-[0_18px_54px_rgba(94,67,18,0.12)] sm:p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* API key */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="mb-1.5 block text-sm font-semibold text-foreground">
                 Anthropic API key
               </label>
               <button
@@ -167,18 +184,17 @@ export default function Home() {
                 disabled={isLoading}
                 onClick={() => setShowApiKeyModal(true)}
                 className={[
-                  "w-full rounded-xl border px-4 py-2.5 text-sm text-left transition-all duration-200 cursor-pointer flex items-center gap-3",
+                  "flex w-full cursor-pointer items-center gap-3 rounded-xl border px-4 py-2.5 text-left text-sm transition-all duration-200",
                   apiKey
-                    ? "border-primary/40 bg-primary/5 hover:bg-primary/10"
-                    : "border-slate-700/80 bg-slate-800/60 hover:border-primary/40 hover:bg-slate-800",
-                  "disabled:opacity-50 disabled:cursor-not-allowed",
+                    ? "border-primary/35 bg-primary/5 hover:bg-primary/10"
+                    : "border-card-border bg-white hover:border-primary/30",
+                  "disabled:cursor-not-allowed disabled:opacity-50",
                 ].join(" ")}
               >
-                {/* Lock icon */}
                 <svg
                   className={[
                     "h-4 w-4 flex-shrink-0 transition-colors duration-200",
-                    apiKey ? "text-primary-light" : "text-slate-500",
+                    apiKey ? "text-primary" : "text-muted",
                   ].join(" ")}
                   viewBox="0 0 24 24"
                   fill="none"
@@ -204,24 +220,23 @@ export default function Home() {
                   className={[
                     "flex-1 truncate",
                     apiKey
-                      ? "text-slate-300 font-mono tracking-widest"
-                      : "text-slate-500",
+                      ? "font-mono tracking-widest text-foreground"
+                      : "text-muted",
                   ].join(" ")}
                 >
                   {apiKey ? "••••••••••••••••" : "Click to enter API key"}
                 </span>
                 {apiKey && (
-                  <span className="flex-shrink-0 text-xs text-primary-light/70 font-medium">
+                  <span className="flex-shrink-0 text-xs font-semibold text-primary">
                     Set
                   </span>
                 )}
               </button>
-              <p className="mt-1.5 text-xs text-slate-500">
+              <p className="mt-1.5 text-xs text-muted">
                 Your key is sent directly to Anthropic and is never stored.
               </p>
             </div>
 
-            {/* API key modal */}
             {showApiKeyModal && (
               <ApiKeyModal
                 value={apiKey}
@@ -233,7 +248,6 @@ export default function Home() {
               />
             )}
 
-            {/* Company name */}
             <InputField
               label="Company name"
               type="text"
@@ -243,9 +257,8 @@ export default function Home() {
               disabled={isLoading}
             />
 
-            {/* Job description */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="mb-1.5 block text-sm font-semibold text-foreground">
                 Job description
               </label>
               <textarea
@@ -254,12 +267,11 @@ export default function Home() {
                 placeholder="Paste the full job posting here..."
                 rows={7}
                 disabled={isLoading}
-                className="w-full rounded-xl border border-slate-700/80 bg-slate-800/60 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/50 disabled:opacity-50 disabled:cursor-not-allowed resize-y transition-all duration-200"
+                className="w-full resize-y rounded-xl border border-card-border bg-white px-4 py-3 text-sm text-foreground placeholder:text-muted/90 transition-all duration-200 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/45 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
-            {/* File uploads */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FileUpload
                 label="CV (PDF)"
                 accept=".pdf"
@@ -278,16 +290,15 @@ export default function Home() {
               />
             </div>
 
-            {/* Generate button */}
             <button
               type="submit"
               disabled={!canSubmit}
-              className="w-full rounded-xl bg-cta text-white font-semibold py-3 text-sm hover:bg-cta-hover active:scale-[0.98] transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 cursor-pointer shadow-lg shadow-cta/20 hover:shadow-cta/30"
+              className="w-full cursor-pointer rounded-xl bg-cta py-3 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(210,90,23,0.3)] transition-all duration-150 hover:bg-cta-hover hover:shadow-[0_14px_34px_rgba(188,78,18,0.35)] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none disabled:active:scale-100"
             >
               {isLoading ? (
                 <span className="inline-flex items-center gap-2">
                   <svg
-                    className="h-4 w-4 spinner"
+                    className="spinner h-4 w-4"
                     viewBox="0 0 24 24"
                     fill="none"
                     aria-hidden="true"
@@ -314,20 +325,18 @@ export default function Home() {
             </button>
           </form>
 
-          {/* Progress */}
           {isLoading && (
-            <div className="mt-8 animate-slide-up">
+            <div className="animate-slide-up mt-8">
               <ProgressSteps currentStep={currentStep} />
             </div>
           )}
 
-          {/* Success */}
           {status === "success" && pdfUrl && texUrl && (
-            <div className="mt-8 animate-slide-up rounded-xl bg-teal-950/50 border border-teal-800/60 p-5">
-              <div className="flex items-center gap-2 mb-4">
+            <div className="animate-slide-up mt-8 rounded-xl border border-emerald-200 bg-emerald-50 p-5">
+              <div className="mb-4 flex items-center gap-2">
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20">
                   <svg
-                    className="h-3.5 w-3.5 text-primary-light"
+                    className="h-3.5 w-3.5 text-primary"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -339,64 +348,37 @@ export default function Home() {
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 </div>
-                <span className="text-sm text-teal-300 font-semibold">
+                <span className="text-sm font-semibold text-emerald-900">
                   Cover letter ready
                 </span>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row">
                 <a
                   href={texUrl}
                   download="cover-letter.tex"
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-slate-700/80 text-slate-200 text-sm font-semibold px-4 py-2.5 hover:bg-slate-600/80 transition-colors duration-150 cursor-pointer"
+                  className="inline-flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg border border-card-border bg-white px-4 py-2.5 text-sm font-semibold text-foreground transition-colors duration-150 hover:border-primary/30 hover:text-primary"
                 >
-                  <svg
-                    className="h-4 w-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
-                  </svg>
+                  <DownloadIcon />
                   Download .tex
                 </a>
                 <a
                   href={pdfUrl}
                   download="cover-letter.pdf"
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-white text-sm font-semibold px-4 py-2.5 hover:bg-primary-light transition-colors duration-150 cursor-pointer shadow-md shadow-primary/20"
+                  className="inline-flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_22px_rgba(27,127,106,0.25)] transition-colors duration-150 hover:bg-primary-light"
                 >
-                  <svg
-                    className="h-4 w-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
-                  </svg>
+                  <DownloadIcon />
                   Download PDF
                 </a>
               </div>
             </div>
           )}
 
-          {/* Error */}
           {status === "error" && errorMsg && (
-            <div className="mt-8 animate-slide-up rounded-xl bg-red-950/50 border border-red-800/60 p-5">
-              <div className="flex items-center gap-2 mb-1">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-red-500/20">
+            <div className="animate-slide-up mt-8 rounded-xl border border-rose-200 bg-rose-50 p-5">
+              <div className="mb-1 flex items-center gap-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-rose-200/70">
                   <svg
-                    className="h-3.5 w-3.5 text-red-400"
+                    className="h-3.5 w-3.5 text-rose-700"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -409,27 +391,22 @@ export default function Home() {
                     <line x1="6" y1="6" x2="18" y2="18" />
                   </svg>
                 </div>
-                <span className="text-sm text-red-300 font-semibold">
+                <span className="text-sm font-semibold text-rose-900">
                   Generation failed
                 </span>
               </div>
-              <p className="text-sm text-red-400/90 mt-1 ml-8">{errorMsg}</p>
+              <p className="ml-8 mt-1 text-sm text-rose-700">{errorMsg}</p>
             </div>
           )}
         </div>
 
-        {/* Footer */}
-        <p className="text-center text-xs text-slate-600 mt-6">
-          Powered by Claude &middot; Your API key is never stored
+        <p className="mt-6 text-center text-xs text-muted">
+          Powered by Claude. Your API key is never stored.
         </p>
       </div>
     </main>
   );
 }
-
-// ---------------------------------------------------------------------------
-// Sub-components
-// ---------------------------------------------------------------------------
 
 function InputField({
   label,
@@ -452,7 +429,7 @@ function InputField({
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-slate-300 mb-1.5">
+      <label className="mb-1.5 block text-sm font-semibold text-foreground">
         {label}
       </label>
       <input
@@ -462,11 +439,11 @@ function InputField({
         placeholder={placeholder}
         disabled={disabled}
         className={[
-          "w-full rounded-xl border border-slate-700/80 bg-slate-800/60 px-4 py-2.5 text-sm text-slate-50 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200",
+          "w-full rounded-xl border border-card-border bg-white px-4 py-2.5 text-sm text-foreground placeholder:text-muted/90 transition-all duration-200 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/45 disabled:cursor-not-allowed disabled:opacity-50",
           mono ? "font-mono" : "",
         ].join(" ")}
       />
-      {hint && <p className="mt-1.5 text-xs text-slate-500">{hint}</p>}
+      {hint && <p className="mt-1.5 text-xs text-muted">{hint}</p>}
     </div>
   );
 }
@@ -481,15 +458,14 @@ function ProgressSteps({ currentStep }: { currentStep: number }) {
         return (
           <div key={step.label}>
             <div className="flex items-center gap-3 py-1.5">
-              {/* Step circle */}
               <div
                 className={[
-                  "flex h-7 w-7 items-center justify-center rounded-full flex-shrink-0 transition-all duration-300",
+                  "flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full transition-all duration-300",
                   done
                     ? "bg-primary text-white"
                     : active
-                      ? "bg-primary/15 ring-2 ring-primary/60 text-primary-light"
-                      : "bg-slate-800 text-slate-600 ring-1 ring-slate-700",
+                      ? "bg-primary/10 text-primary ring-2 ring-primary/35"
+                      : "bg-white text-muted ring-1 ring-card-border",
                 ].join(" ")}
               >
                 {done ? (
@@ -510,30 +486,26 @@ function ProgressSteps({ currentStep }: { currentStep: number }) {
                 )}
               </div>
 
-              {/* Label */}
               <span
                 className={[
                   "text-sm transition-colors duration-200",
                   done
-                    ? "text-slate-500 line-through"
+                    ? "text-muted line-through"
                     : active
-                      ? "text-slate-100 font-medium"
-                      : "text-slate-600",
+                      ? "font-semibold text-foreground"
+                      : "text-muted",
                 ].join(" ")}
               >
                 {step.label}
                 {active && (
-                  <span className="ml-1.5 inline-block step-pulse text-primary-light">
+                  <span className="step-pulse ml-1.5 inline-block text-primary">
                     ...
                   </span>
                 )}
               </span>
             </div>
 
-            {/* Connector line */}
-            {!isLast && (
-              <div className="ml-3.5 w-px h-3 bg-slate-700/60" />
-            )}
+            {!isLast && <div className="ml-3.5 h-3 w-px bg-card-border" />}
           </div>
         );
       })}
@@ -548,7 +520,7 @@ function StepIcon({
   name: string;
   active: boolean;
 }) {
-  const cls = `h-3.5 w-3.5 ${active ? "text-primary-light" : "text-slate-600"}`;
+  const cls = `h-3.5 w-3.5 ${active ? "text-primary" : "text-muted"}`;
   switch (name) {
     case "document":
       return (
@@ -638,10 +610,13 @@ function FileUpload({
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
 
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    if (!disabled) setDragOver(true);
-  }, [disabled]);
+  const handleDragOver = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      if (!disabled) setDragOver(true);
+    },
+    [disabled],
+  );
 
   const handleDragLeave = useCallback(() => {
     setDragOver(false);
@@ -660,7 +635,7 @@ function FileUpload({
 
   return (
     <div>
-      <label className="block text-sm font-medium text-slate-300 mb-1.5">
+      <label className="mb-1.5 block text-sm font-semibold text-foreground">
         {label}
       </label>
       <button
@@ -671,21 +646,19 @@ function FileUpload({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={[
-          "w-full rounded-xl border-2 border-dashed px-4 py-5 text-sm text-center transition-all duration-200 drop-zone-glow",
+          "drop-zone-glow w-full rounded-xl border-2 border-dashed px-4 py-5 text-center text-sm transition-all duration-200",
           file
-            ? "border-primary/50 bg-primary/5 text-primary-light"
+            ? "border-primary/40 bg-primary/5 text-primary"
             : dragOver
-              ? "border-primary bg-primary/10 text-primary-light"
-              : "border-slate-700/60 bg-slate-800/30 text-slate-500 hover:border-primary/40 hover:text-slate-400",
-          disabled
-            ? "opacity-50 cursor-not-allowed"
-            : "cursor-pointer",
+              ? "border-primary bg-primary/10 text-primary"
+              : "border-card-border bg-white text-muted hover:border-primary/35",
+          disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer",
         ].join(" ")}
       >
         {file ? (
           <span className="flex items-center justify-center gap-2">
             <FileIcon type={icon} />
-            <span className="font-medium truncate max-w-[160px]">
+            <span className="max-w-[160px] truncate font-semibold">
               {file.name}
             </span>
           </span>
@@ -752,19 +725,16 @@ function ApiKeyModal({
       aria-modal="true"
       aria-label="Enter API key"
     >
-      {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/35 backdrop-blur-[2px]"
         onClick={onClose}
       />
 
-      {/* Modal */}
-      <div className="relative w-full max-w-md rounded-2xl border border-card-border bg-card p-6 shadow-2xl shadow-black/40 animate-slide-up">
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/15 ring-1 ring-primary/30">
+      <div className="animate-slide-up relative w-full max-w-md rounded-2xl border border-card-border bg-card p-6 shadow-[0_24px_60px_rgba(45,32,12,0.25)]">
+        <div className="mb-5 flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/12 text-primary ring-1 ring-primary/20">
             <svg
-              className="h-4.5 w-4.5 text-primary-light"
+              className="h-4.5 w-4.5"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -778,16 +748,13 @@ function ApiKeyModal({
             </svg>
           </div>
           <div>
-            <h2 className="text-base font-semibold text-slate-100">
+            <h2 className="text-base font-semibold text-foreground">
               Anthropic API key
             </h2>
-            <p className="text-xs text-slate-500">
-              Your key is never stored on our servers
-            </p>
+            <p className="text-xs text-muted">Your key is never stored on our servers</p>
           </div>
         </div>
 
-        {/* Input */}
         <input
           ref={inputRef}
           type="password"
@@ -797,22 +764,21 @@ function ApiKeyModal({
           onKeyDown={(e) => {
             if (e.key === "Enter") onSave(draft);
           }}
-          className="w-full rounded-xl border border-slate-700/80 bg-slate-800/60 px-4 py-2.5 text-sm text-slate-50 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/50 transition-all duration-200 font-mono"
+          className="w-full rounded-xl border border-card-border bg-white px-4 py-2.5 font-mono text-sm text-foreground placeholder:text-muted/90 transition-all duration-200 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/45"
         />
 
-        {/* Actions */}
-        <div className="flex gap-3 mt-5">
+        <div className="mt-5 flex gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 rounded-xl border border-slate-700/80 bg-slate-800/40 text-slate-300 text-sm font-medium py-2.5 hover:bg-slate-700/60 transition-colors duration-150 cursor-pointer"
+            className="flex-1 cursor-pointer rounded-xl border border-card-border bg-white py-2.5 text-sm font-semibold text-foreground transition-colors duration-150 hover:border-primary/35 hover:text-primary"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={() => onSave(draft)}
-            className="flex-1 rounded-xl bg-primary text-white text-sm font-semibold py-2.5 hover:bg-primary-light transition-colors duration-150 cursor-pointer shadow-md shadow-primary/20"
+            className="flex-1 cursor-pointer rounded-xl bg-primary py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-primary-light"
           >
             Save key
           </button>
@@ -847,6 +813,25 @@ function FileIcon({ type }: { type: "pdf" | "tex" }) {
           <polyline points="14 12 16 14 14 16" />
         </>
       )}
+    </svg>
+  );
+}
+
+function DownloadIcon() {
+  return (
+    <svg
+      className="h-4 w-4"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
     </svg>
   );
 }
