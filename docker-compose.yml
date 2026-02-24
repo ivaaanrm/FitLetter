@@ -8,6 +8,7 @@ services:
       - "3000"
     networks:
       - traefik-public
+      - coverletter-internal
     depends_on:
       - backend
     labels:
@@ -28,16 +29,10 @@ services:
     environment:
       CORS_ORIGINS: "https://${DOMAIN}"
     networks:
-      - traefik-public
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.coverletter-api.rule=Host(`${DOMAIN}`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.coverletter-api.entrypoints=websecure"
-      - "traefik.http.routers.coverletter-api.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.coverletter-api.priority=20"
-      - "traefik.http.services.coverletter-api.loadbalancer.server.port=8000"
-      - "traefik.docker.network=traefik-public"
+      - coverletter-internal
 
 networks:
   traefik-public:
     external: true
+  coverletter-internal:
+    driver: bridge
