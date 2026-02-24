@@ -21,7 +21,7 @@ Use AFTER analyzing job description to have clear talking points.
 - Generate personalized cover letters from resume + job description
 - Match tone to company culture
 - Address qualification gaps strategically
-- Create compelling opening hooks
+- Create compelling opening hooks!
 - Structure persuasive arguments for candidacy
 - Maintain authenticity while selling effectively
 

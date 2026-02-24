@@ -1,0 +1,43 @@
+services:
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile.prod
+    restart: unless-stopped
+    expose:
+      - "3000"
+    networks:
+      - traefik-public
+    depends_on:
+      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.coverletter.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.coverletter.entrypoints=websecure"
+      - "traefik.http.routers.coverletter.tls.certresolver=letsencrypt"
+      - "traefik.http.services.coverletter.loadbalancer.server.port=3000"
+      - "traefik.docker.network=traefik-public"
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.prod
+    restart: unless-stopped
+    expose:
+      - "8000"
+    environment:
+      CORS_ORIGINS: "https://${DOMAIN}"
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.coverletter-api.rule=Host(`${DOMAIN}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.coverletter-api.entrypoints=websecure"
+      - "traefik.http.routers.coverletter-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.coverletter-api.priority=20"
+      - "traefik.http.services.coverletter-api.loadbalancer.server.port=8000"
+      - "traefik.docker.network=traefik-public"
+
+networks:
+  traefik-public:
+    external: true

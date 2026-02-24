@@ -1,6 +1,11 @@
 import logging
+import os
 
 from dotenv import load_dotenv
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from routes.generate import router as generate_router
 
 load_dotenv()
 
@@ -9,16 +14,14 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-
-from routes.generate import router as generate_router
 
 app = FastAPI(title="Cover Letter Maker")
 
+cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
