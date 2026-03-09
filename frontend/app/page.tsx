@@ -145,22 +145,60 @@ export default function Home() {
             </div>
           </div>
 
-          <a
-            href="https://github.com/ivaaanrm/FitLetter"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl border border-card-border bg-white px-4 py-2 text-sm font-semibold text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary hover:shadow-[0_10px_20px_rgba(27,127,106,0.14)]"
-          >
-            <svg
-              className="h-4 w-4"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden="true"
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={() => setShowApiKeyModal(true)}
+              className={[
+                "inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5",
+                apiKey
+                  ? "border-primary/40 bg-primary/10 text-primary shadow-[0_10px_20px_rgba(27,127,106,0.14)] hover:bg-primary/20"
+                  : "border-card-border bg-white text-foreground hover:border-primary/40 hover:text-primary hover:shadow-[0_10px_20px_rgba(27,127,106,0.14)]",
+                "disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+              ].join(" ")}
             >
-              <path d="M12 .5C5.65.5.5 5.7.5 12.12c0 5.14 3.29 9.5 7.86 11.04.58.11.79-.26.79-.58v-2.24c-3.2.71-3.88-1.39-3.88-1.39-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.78 1.22 1.78 1.22 1.03 1.8 2.7 1.28 3.35.98.1-.76.4-1.28.74-1.57-2.55-.3-5.23-1.3-5.23-5.78 0-1.28.45-2.32 1.19-3.14-.12-.3-.52-1.5.11-3.13 0 0 .97-.32 3.18 1.2a10.9 10.9 0 0 1 5.78 0c2.2-1.52 3.17-1.2 3.17-1.2.63 1.63.23 2.83.11 3.13.74.82 1.19 1.86 1.19 3.14 0 4.5-2.69 5.47-5.25 5.76.41.36.78 1.06.78 2.14v3.17c0 .32.21.7.8.58a11.64 11.64 0 0 0 7.84-11.04C23.5 5.7 18.35.5 12 .5" />
-            </svg>
-            GitHub Repo
-          </a>
+              <svg
+                className="h-4 w-4 flex-shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                {apiKey ? (
+                  <>
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </>
+                ) : (
+                  <>
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 9.9-1" />
+                  </>
+                )}
+              </svg>
+              {apiKey ? "API Key Set" : "Add API Key"}
+            </button>
+            <a
+              href="https://github.com/ivaaanrm/FitLetter"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl border border-card-border bg-white px-4 py-2 text-sm font-semibold text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary hover:shadow-[0_10px_20px_rgba(27,127,106,0.14)] hidden sm:inline-flex"
+            >
+              <svg
+                className="h-4 w-4"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M12 .5C5.65.5.5 5.7.5 12.12c0 5.14 3.29 9.5 7.86 11.04.58.11.79-.26.79-.58v-2.24c-3.2.71-3.88-1.39-3.88-1.39-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.78 1.22 1.78 1.22 1.03 1.8 2.7 1.28 3.35.98.1-.76.4-1.28.74-1.57-2.55-.3-5.23-1.3-5.23-5.78 0-1.28.45-2.32 1.19-3.14-.12-.3-.52-1.5.11-3.13 0 0 .97-.32 3.18 1.2a10.9 10.9 0 0 1 5.78 0c2.2-1.52 3.17-1.2 3.17-1.2.63 1.63.23 2.83.11 3.13.74.82 1.19 1.86 1.19 3.14 0 4.5-2.69 5.47-5.25 5.76.41.36.78 1.06.78 2.14v3.17c0 .32.21.7.8.58a11.64 11.64 0 0 0 7.84-11.04C23.5 5.7 18.35.5 12 .5" />
+              </svg>
+              GitHub Repo
+            </a>
+          </div>
         </nav>
 
         <header className="mb-8 max-w-2xl">
@@ -175,67 +213,7 @@ export default function Home() {
 
         <div className="rounded-[1.6rem] border border-card-border bg-card/95 p-6 shadow-[0_18px_54px_rgba(94,67,18,0.12)] sm:p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="mb-1.5 block text-sm font-semibold text-foreground">
-                Anthropic API key
-              </label>
-              <button
-                type="button"
-                disabled={isLoading}
-                onClick={() => setShowApiKeyModal(true)}
-                className={[
-                  "flex w-full cursor-pointer items-center gap-3 rounded-xl border px-4 py-2.5 text-left text-sm transition-all duration-200",
-                  apiKey
-                    ? "border-primary/35 bg-primary/5 hover:bg-primary/10"
-                    : "border-card-border bg-white hover:border-primary/30",
-                  "disabled:cursor-not-allowed disabled:opacity-50",
-                ].join(" ")}
-              >
-                <svg
-                  className={[
-                    "h-4 w-4 flex-shrink-0 transition-colors duration-200",
-                    apiKey ? "text-primary" : "text-muted",
-                  ].join(" ")}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  {apiKey ? (
-                    <>
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </>
-                  ) : (
-                    <>
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                      <path d="M7 11V7a5 5 0 0 1 9.9-1" />
-                    </>
-                  )}
-                </svg>
-                <span
-                  className={[
-                    "flex-1 truncate",
-                    apiKey
-                      ? "font-mono tracking-widest text-foreground"
-                      : "text-muted",
-                  ].join(" ")}
-                >
-                  {apiKey ? "••••••••••••••••" : "Click to enter API key"}
-                </span>
-                {apiKey && (
-                  <span className="flex-shrink-0 text-xs font-semibold text-primary">
-                    Set
-                  </span>
-                )}
-              </button>
-              <p className="mt-1.5 text-xs text-muted">
-                Your key is sent directly to Anthropic and is never stored.
-              </p>
-            </div>
+
 
             {showApiKeyModal && (
               <ApiKeyModal
